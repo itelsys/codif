@@ -1,0 +1,1026 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>codif</string>
+			<key>host</key>
+			<string>localhost</string>
+			<key>kcid</key>
+			<string>1882776382132002198</string>
+			<key>name</key>
+			<string>app</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPSocketConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>latin1</string>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGNjdYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK0HCBUWFxgZHSQoLDA0VSRudWxs0wkK
+			CwwQFFdOUy5rZXlzWk5TLm9iamVjdHNWJGNsYXNzow0OD4ACgAOA
+			BKMREhOABYAGgAiADFR0eXBlVHJvd3NUa2V5c18QJlNlbGVjdGlv
+			bkRldGFpbFR5cGVQcmltYXJ5S2V5ZWREZXRhaWxz0wkKCxobHKCg
+			gAfSHh8gIVokY2xhc3NuYW1lWCRjbGFzc2VzXxATTlNNdXRhYmxl
+			RGljdGlvbmFyeaMgIiNcTlNEaWN0aW9uYXJ5WE5TT2JqZWN00goL
+			JSehJoAJgAvSCykqK1lOUy5zdHJpbmeAClJpZNIeHy0uXxAPTlNN
+			dXRhYmxlU3RyaW5noy0vI1hOU1N0cmluZ9IeHzEyXk5TTXV0YWJs
+			ZUFycmF5ozEzI1dOU0FycmF50h4fIjWiIiNfEA9OU0tleWVkQXJj
+			aGl2ZXLRODlUZGF0YYABAAgAEQAaACMALQAyADcARQBLAFIAWgBl
+			AGwAcAByAHQAdgB6AHwAfgCAAIIAhwCMAJEAugDBAMIAwwDFAMoA
+			1QDeAPQA+AEFAQ4BEwEVARcBGQEeASgBKgEtATIBRAFIAVEBVgFl
+			AWkBcQF2AXkBiwGOAZMAAAAAAAACAQAAAAAAAAA6AAAAAAAAAAAA
+			AAAAAAABlQ==
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 0}, {1049, 654}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>DELIMITER //
+CREATE PROCEDURE table_recherche(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in nomdep VARCHAR(255), in nomdoc VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id,doc.code_site,doc.code_projet,doc.code_dep,doc.code_doc,doc.code_doc, user_name, nom_site , nom_projet, nom_dep,nom_doc, num_doc,lien, version 
+    from documents doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join departements as dep on doc.code_dep = dep.code_dep
+    join document_types as dt on doc.code_doc = dt.code_doc
+    join actions as act on act.link = doc.lien ";
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF nomdep !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',nomdep,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',nomdep,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF nomdoc !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',nomdoc,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',nomdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_doc =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_doc =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END //
+
+
+DELIMITER //
+CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sa
+    join equipements as eq on doc.code_equip = eq.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_atelier = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_atelier = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_sa = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_sa = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_equip = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_equip = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_plan =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_plan =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END //
+
+
+drop procedure table_recherche;
+
+CALL table_recherche('','','','jj')
+
+call table_recherche('','dddd','','','');
+
+CALL table_recherche("","","","erlerlerl","");
+
+CALL table_recherche('','','','');
+
+
+select * from actions where codech = 'po-ka-kz-001'
+
+
+update actions set link= aaaaaa where codech = "po-ka-kz-kz-001"
+
+
+CALL recherche_plan_pro("ktee","","","","","");</string>
+			<key>table</key>
+			<string>codif_plans</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>391</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>CALL recherche_plan_pro("ktee","","","","","")</string>
+		<string>CALL recherche_plan_pro("","","","","","")</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sa
+    join equipements as eq on doc.code_equip = eq.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_atelier = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_atelier = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_sa = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_sa = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_equip = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_equip = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_plan =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_plan =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>drop procedure recherche_plan_pro</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sousa
+    join equipements as eq on doc.code_equip = eq.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_atelier = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_atelier = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_sa = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_sa = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_equip = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_equip = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_plan =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_plan =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CALL recherche_plan_pro("","","","","")</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sousa
+    join equipements as dt on doc.code_equip = dt.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_atelier = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_atelier = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_sa = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_sa = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_equip = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_equip = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_plan =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_plan =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sousa
+    join equipements as dt on doc.code_equip = dt.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_atelier = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_atelier = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_sa = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_sa = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_equip = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_equip = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_plan =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_plan =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sousa
+    join equipements as dt on doc.code_equip = dt.code_equip
+    join actions as act on act.link = doc.lien" ;
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_doc =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_doc =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CREATE PROCEDURE recherche_plan_pro(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in ate VARCHAR(255), in souate VARCHAR(255), in equip VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = select doc.id, doc.code_site, doc.code_projet, doc.code_atelier, doc.code_sousa, doc.code_equip, doc.num_plan, user_name, nom_site, nom_projet, nom_atelier, nom_sa, nom_equip, lien, version 
+    from codif_plans doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join ateliers as dep on doc.code_atelier = dep.code_atelier
+    join sous_ateliers as dt on doc.code_sousa = dt.code_sousa
+    join equipements as dt on doc.code_equip = dt.code_equip
+    join actions as act on act.link = doc.lien 
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF ate !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',ate,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',ate,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF souate !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',souate,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',souate,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF equip !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',equip,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',equip,'"'));
+       END IF;
+       
+    END IF;
+    
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_doc =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_doc =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CALL table_recherche("","","","erlerlerl","")</string>
+		<string>CALL table_recherche("","dddd","","","")</string>
+		<string>call table_recherche('','dddd','','','')</string>
+		<string>call table_recherche('','','','','')</string>
+		<string>call table_recherche('dd','dd','','','')</string>
+		<string>CREATE PROCEDURE table_recherche(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in nomdep VARCHAR(255), in nomdoc VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     
+    SET req = "select doc.id,doc.code_site,doc.code_projet,doc.code_dep,doc.code_doc,doc.code_doc, user_name, nom_site , nom_projet, nom_dep,nom_doc, num_doc,lien, version 
+    from documents doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join departements as dep on doc.code_dep = dep.code_dep
+    join document_types as dt on doc.code_doc = dt.code_doc
+    join actions as act on act.link = doc.lien ";
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF nomdep !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',nomdep,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',nomdep,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF nomdoc !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',nomdoc,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',nomdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_doc =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_doc =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>drop procedure table_recherche</string>
+		<string>CREATE PROCEDURE table_recherche(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in nomdep VARCHAR(255), in nomdoc VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     DECLARE b BOOL; 
+    SET req = "select doc.id,doc.code_site,doc.code_projet,doc.code_dep,doc.code_doc,doc.code_doc, user_name, nom_site , nom_projet, nom_dep,nom_doc, num_doc,lien, version 
+    from documents doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join departements as dep on doc.code_dep = dep.code_dep
+    join document_types as dt on doc.code_doc = dt.code_doc
+    join actions as act on act.link = doc.lien ";
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+       
+     
+    IF nomdep !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',nomdep,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',nomdep,'"'));
+      END IF;
+      
+    END IF;
+    
+       
+    IF nomdoc !='' THEN
+    
+       IF cond !='' THEN
+          SET cond = concat(cond, ' AND ', 'nom_doc = ', concat('"',nomdoc,'"'));
+       ELSE
+          SET cond = concat('nom_doc = ', concat('"',nomdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    IF numdoc !='' THEN
+    
+       IF cond != '' THEN
+          SET cond = concat(cond, ' AND ', 'num_doc =', concat('"',numdoc,'"'));
+       ELSE
+          SET cond = concat('num_doc =', concat('"',numdoc,'"'));
+       END IF;
+       
+    END IF;
+    
+    SET @res =  req;
+    
+    IF cond != '' THEN
+    
+       SET @res =  CONCAT(req, ' where ', cond);
+       
+    END IF;     
+    
+    prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque;
+    
+END</string>
+		<string>CALL table_recherche("","","jj","","")</string>
+		<string>CREATE PROCEDURE table_recherche(in nomsite VARCHAR(255), in nomprojet VARCHAR(255), in nomdep VARCHAR(255), in nomdoc VARCHAR(255), in numdoc VARCHAR(255) )
+BEGIN
+
+     DECLARE req VARCHAR(2000);
+     DECLARE cond VARCHAR(255);
+     DECLARE b BOOL; 
+    SET req = "select doc.id,doc.code_site,doc.code_projet,doc.code_dep,doc.code_doc,doc.code_doc, user_name, nom_site , nom_projet, nom_dep,nom_doc, num_doc,lien, version 
+    from documents doc 
+    join sites on doc.code_site = sites.code_site 
+    join projects on doc.code_projet = projects.code_projet
+    join departements as dep on doc.code_dep = dep.code_dep
+    join document_types as dt on doc.code_doc = dt.code_doc
+    join actions as act on act.link = doc.lien ";
+    
+    
+    IF nomsite !="" THEN
+         SET cond = concat('nom_site = ', concat('"',nomsite,'"'));
+    END IF;
+   
+    IF nomprojet !="" THEN
+    
+       IF cond !="" THEN 
+         /* SET cond = concat(' AND ', cond); */
+          SET cond = concat(cond, ' AND ','nom_projet = ', concat('"',nomprojet,'"'));
+      ELSE
+         SET cond = concat('nom_projet = ', concat('"',nomprojet,'"'));
+      END IF;
+      
+    END IF;
+    
+    
+     
+    IF nomdep !='' THEN
+    
+      IF cond !='' THEN
+         SET cond = concat(cond, ' AND ','nom_dep = ', concat('"',nomdep,'"'));
+      ELSE
+         SET cond = concat('nom_dep = ', concat('"',nomdep,'"'));
+      END IF;
+      
+    END IF;
+    
+    select cond;
+    
+    if nomdoc !='' then
+      if cond !='' then
+      set cond = concat(' AND ', cond);
+      end if;
+      set cond = concat('nom_doc = ', concat('"',nomdoc,'"'), cond);
+    end if;
+    
+    if numdoc !='' then
+       if cond != '' then
+       set cond = concat(' AND ', cond);
+       end if;
+       set cond = concat('num_doc =', concat('"',numdoc,'"'), cond);
+    end if;
+    
+    /* set @res =  req; */
+    
+    if cond != '' then
+    set @res =  CONCAT(req, ' where ', cond);
+    
+     end if;
+     
+    
+    /* prepare stmt_reque FROM @res;
+    EXECUTE stmt_reque; */
+    
+END</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.7.17</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>
