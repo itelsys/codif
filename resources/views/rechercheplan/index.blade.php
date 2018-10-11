@@ -21,7 +21,7 @@
 		<button type="button" class="btn btn-success btnExp" >Exporter</button>
 	</div>
 	<div class="row mt-3">
-		<table class="table">
+		<table class="table" style="table-layout: fixed;">
 			<thead>
 				<tr>
 					<th>Site</th>
@@ -41,14 +41,14 @@
 			<tbody>
 				@foreach($codplan as $pl => $val)
 				<tr>
-					<td>{{$val->nom_site}}</td>
-					<td>{{$val->nom_projet}}</td>
-					<td>{{$val->nom_atelier}}</td>
-					<td>{{$val->nom_sa}}</td>
-					<td>{{$val->nom_equip}}</td>
-					<td>{{$val->lien}}</td>
-					<td>{{$val->version}}</td>
-					<td>{{$val->code_site}}-{{$val->code_projet}}-{{$val->code_atelier}}-{{$val->code_sousa}}-{{$val->code_equip}}-{{sprintf('%03d',$val->num_plan)}}</td>
+					<td style="word-wrap: break-word">{{$val->nom_site}}</td>
+					<td style="word-wrap: break-word">{{$val->nom_projet}}</td>
+					<td style="word-wrap: break-word">{{$val->nom_atelier}}</td>
+					<td style="word-wrap: break-word">{{$val->nom_sa}}</td>
+					<td style="word-wrap: break-word">{{$val->nom_equip}}</td>
+					<td style="word-wrap: break-word">{{$val->lien}}</td>
+					<td style="word-wrap: break-word">{{$val->version}}</td>
+					<td style="word-wrap: break-word">{{$val->code_site}}-{{$val->code_projet}}-{{$val->code_atelier}}-{{$val->code_sousa}}-{{$val->code_equip}}-{{sprintf('%03d',$val->num_plan)}}</td>
 					<td>{{$val->user_name}}</td>
 					@if(Auth::user()->isAdmine())
 					<td><button  class="btn btn-success" data-toggle="modal" data-target="#modifLink" data-link='{{$val->lien}}' data-id='{{$val->id}}' data-code="{{$val->code_site}}-{{$val->code_projet}}-{{$val->code_atelier}}-{{$val->code_sousa}}-{{$val->code_equip}}-{{sprintf('%03d',$val->num_plan)}}">Modifier</button></td>
